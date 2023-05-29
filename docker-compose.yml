@@ -1,0 +1,51 @@
+version: '3'
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    ports:
+      - 7545:7545
+  benz-web:
+    build:
+      context: ./benz-web
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - root-network
+  benz-backend:
+    build:
+      context: ./benz-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: usernameSecret
+      DB_PASSWORD: usernamePassword
+    expose:
+      - "5432"
+    depends_on:
+      - db
+    networks:
+      - root-network
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: usernameSecret
+      POSTGRES_PASSWORD: usernamePassword
+      POSTGRES_DB: nric-db
+    volumes:
+      - ./init-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data:/var/lib/postgresql/data/
+    networks:
+      - root-network
+  adminer:
+     image: adminer
+     ports:
+       - 8080:8080
+networks:
+  root-network:
+    driver: bridge
