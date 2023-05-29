@@ -109,6 +109,7 @@ const App = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div>
       {error && <p>Error: {error}</p>}
       <p>Connected Account: {connectedAccount}</p>
       {!connectedAccount && (
@@ -123,6 +124,9 @@ const App = () => {
             placeholder="Enter NRIC"
           />
           <button onClick={generateReceipt}>Mint NFT</button>
+          <p>
+          <button onClick={mintNFT}>Mint NFT without Receipt(Incase of CORS errors)</button>
+          </p>
         </>
       )}
       {nftImageUrl && (
@@ -131,6 +135,7 @@ const App = () => {
           <img src={nftImageUrl} alt="NFT" />
         </div>
       )}
+      </div>
     </div>
   );
 };
